@@ -1,42 +1,51 @@
 import React from 'react'
 import { keyType } from './App'
+import Button from './components/Button'
+import Input from './components/Input'
 
 type PropsType = {
+  addTask: (value: string) => void
   title: string
   tasks: Array<TaskType>
-  removeTasks: (id: number) => void
+  removeTasks: (id: string) => void
   changeFilter: (key: keyType) => void
 }
 
 type TaskType = {
-  id: number
+  id: string
   title: string
   isDone: boolean
 }
 
 const Todolist = (props: PropsType) => {
+  const changeFilterHandlerAll = () => props.changeFilter('All')
+
+  const changeFilterHandlerActive = () => props.changeFilter('Active')
+
+  const changeFilterHandlerCompleted = () => props.changeFilter('Completed')
+
   return (
     <div>
       <h3>{props.title}</h3>
-      <div>
-        <input />
-        <button>+</button>
-      </div>
+      <Input callBack={props.addTask} />
+
       <ul>
-        {props.tasks.map((task) => (
-          <li key={task.id}>
-            <button onClick={() => props.removeTasks(task.id)}>x</button>
-            <input key={task.id} type='checkbox' checked={task.isDone} />{' '}
-            <span>{task.title}</span>
-          </li>
-        ))}
+        {props.tasks.map((task) => {
+          const removeTaskHandler = () => props.removeTasks(task.id)
+
+          return (
+            <li key={task.id}>
+              <Button callBack={removeTaskHandler} value={'x'} />
+              <input key={task.id} type='checkbox' checked={task.isDone} />{' '}
+              <span>{task.title}</span>
+            </li>
+          )
+        })}
       </ul>
       <div>
-        <button onClick={() => props.changeFilter('All')}>All</button>
-        <button onClick={() => props.changeFilter('Active')}>Active</button>
-        <button onClick={() => props.changeFilter('Completed')}>
-          Completed
-        </button>
+        <Button callBack={changeFilterHandlerAll} value={'All'} />
+        <Button callBack={changeFilterHandlerActive} value={'Active'} />
+        <Button callBack={changeFilterHandlerCompleted} value={'Completed'} />
       </div>
     </div>
   )
