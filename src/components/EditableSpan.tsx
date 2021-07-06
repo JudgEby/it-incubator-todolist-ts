@@ -1,11 +1,17 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react'
+import { TextField } from '@material-ui/core'
 
 type EditableSpanType = {
+  isDone: boolean
   title: string
   changeTitleHandler: (title: string) => void
 }
 
-const EditableSpan = ({ title, changeTitleHandler }: EditableSpanType) => {
+const EditableSpan = ({
+  isDone,
+  title,
+  changeTitleHandler,
+}: EditableSpanType) => {
   const [editMode, setEditMode] = useState(false)
   let [inputValue, setInputValue] = useState(title)
 
@@ -25,19 +31,20 @@ const EditableSpan = ({ title, changeTitleHandler }: EditableSpanType) => {
   }
 
   return editMode ? (
-    <input
-      type='text'
+    <TextField
+      autoFocus
       value={inputValue}
       onBlur={() => {
         toggleMode()
         changeTitleHandler(inputValue)
       }}
-      autoFocus={true}
-      onChange={(e) => onChangeHandler(e)}
-      onKeyDown={(e) => onKeyDownHandler(e)}
+      onChange={onChangeHandler}
+      onKeyDown={onKeyDownHandler}
     />
   ) : (
-    <span onDoubleClick={toggleMode}>{title}</span>
+    <span className={isDone ? 'isDone' : ''} onDoubleClick={toggleMode}>
+      {title}
+    </span>
   )
 }
 

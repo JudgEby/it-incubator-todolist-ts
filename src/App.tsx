@@ -3,6 +3,17 @@ import './App.css'
 import { TaskType, Todolist } from './Todolist'
 import { v1 } from 'uuid'
 import AddItemForm from './components/AddItemForm'
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography,
+  Container,
+  Grid,
+  Paper,
+} from '@material-ui/core'
+import { Menu } from '@material-ui/icons'
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
@@ -116,27 +127,45 @@ function App() {
     }
 
     return (
-      <Todolist
-        key={v1()}
-        todoListID={tl.id}
-        title={tl.title}
-        tasks={tasksForTodolist}
-        removeTask={removeTask}
-        changeTodoListFilter={changeTodoListFilter}
-        addTask={addTask}
-        changeTaskStatus={changeTaskStatus}
-        changeTaskTitle={changeTaskTitle}
-        filter={tl.filter}
-        removeTodoList={removeTodoList}
-        changeTodoLostTitleHandler={changeTodoLostTitle}
-      />
+      <Grid item key={tl.id}>
+        <Paper style={{ padding: '20px' }} elevation={2}>
+          <Todolist
+            todoListID={tl.id}
+            title={tl.title}
+            tasks={tasksForTodolist}
+            removeTask={removeTask}
+            changeTodoListFilter={changeTodoListFilter}
+            addTask={addTask}
+            changeTaskStatus={changeTaskStatus}
+            changeTaskTitle={changeTaskTitle}
+            filter={tl.filter}
+            removeTodoList={removeTodoList}
+            changeTodoLostTitleHandler={changeTodoLostTitle}
+          />
+        </Paper>
+      </Grid>
     )
   })
 
   return (
     <div className='App'>
-      <AddItemForm addItem={addTodoList} />
-      {todoListsComponents}
+      <AppBar position='static'>
+        <Toolbar style={{ justifyContent: 'space-between' }}>
+          <IconButton edge='start' color='inherit' aria-label='menu'>
+            <Menu />
+          </IconButton>
+          <Typography variant='h6'>TodoLists</Typography>
+          <Button color='inherit'>Menu</Button>
+        </Toolbar>
+      </AppBar>
+      <Container fixed>
+        <Grid container style={{ padding: '20px 0', justifyContent: 'center' }}>
+          <AddItemForm addItem={addTodoList} />
+        </Grid>
+        <Grid container spacing={1}>
+          {todoListsComponents}
+        </Grid>
+      </Container>
     </div>
   )
 }
