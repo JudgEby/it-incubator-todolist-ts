@@ -29,8 +29,10 @@ export type ChangeTodoListFilterAT = {
   todoListID: string
 }
 
+const initialState: TodoListType[] = []
+
 export const todoListsReducer = (
-  todoLists: TodoListType[],
+  todoLists: TodoListType[] = initialState,
   action: ActionsType
 ) => {
   switch (action.type) {

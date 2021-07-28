@@ -62,38 +62,40 @@ export function Todolist(props: PropsType) {
       <AddItemForm addItem={addTask} />
 
       <ul>
-        {props.tasks.map((t) => {
-          const onClickHandler = () => props.removeTask(t.id, props.todoListID)
-          const isDoneHandler = () => {
-            props.changeTaskStatus(t.id, props.todoListID)
-          }
+        {props.tasks &&
+          props.tasks.map((t) => {
+            const onClickHandler = () =>
+              props.removeTask(t.id, props.todoListID)
+            const isDoneHandler = () => {
+              props.changeTaskStatus(t.id, props.todoListID)
+            }
 
-          const changeTaskTitleHandler = (title: string) => {
-            props.changeTaskTitle(t.id, props.todoListID, title)
-          }
-          return (
-            <li key={t.id}>
-              <Checkbox
-                checked={t.isDone}
-                onChange={isDoneHandler}
-                size={'small'}
-                color={'primary'}
-              />
-              <EditableSpan
-                isDone={t.isDone}
-                title={t.title}
-                changeTitleHandler={changeTaskTitleHandler}
-              />
-              <IconButton
-                onClick={onClickHandler}
-                color={'primary'}
-                size={'small'}
-              >
-                <Delete />
-              </IconButton>
-            </li>
-          )
-        })}
+            const changeTaskTitleHandler = (title: string) => {
+              props.changeTaskTitle(t.id, props.todoListID, title)
+            }
+            return (
+              <li key={t.id}>
+                <Checkbox
+                  checked={t.isDone}
+                  onChange={isDoneHandler}
+                  size={'small'}
+                  color={'primary'}
+                />
+                <EditableSpan
+                  isDone={t.isDone}
+                  title={t.title}
+                  changeTitleHandler={changeTaskTitleHandler}
+                />
+                <IconButton
+                  onClick={onClickHandler}
+                  color={'primary'}
+                  size={'small'}
+                >
+                  <Delete />
+                </IconButton>
+              </li>
+            )
+          })}
       </ul>
       <div>
         <Button
