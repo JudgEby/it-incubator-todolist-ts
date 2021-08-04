@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FilterValuesType } from './App'
 import AddItemForm from './components/AddItemForm'
 import EditableSpan from './components/EditableSpan'
 import { Button, IconButton, Checkbox } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
+import Task from './components/Task'
 
 export type TaskType = {
   id: string
@@ -25,22 +26,49 @@ type PropsType = {
   changeTodoLostTitleHandler: (todoListID: string, title: string) => void
 }
 
-export function Todolist(props: PropsType) {
-  const addTask = (title: string) => {
-    props.addTask(title, props.todoListID)
+export const Todolist = React.memo((props: PropsType) => {
+  console.log('Todolist')
+  const addTask = useCallback(
+    (title: string) => {
+      props.addTask(title, props.todoListID)
+    },
+    [props.addTask, props.todoListID]
+  )
+
+  const onClickRemoveTodolistHandler = useCallback(
+    () => props.removeTodoList(props.todoListID),
+    [props.removeTodoList, props.todoListID]
+  )
+
+  const onAllClickHandler = useCallback(
+    () => props.changeTodoListFilter('all', props.todoListID),
+    [props.changeTodoListFilter, props.todoListID]
+  )
+
+  const onActiveClickHandler = useCallback(
+    () => props.changeTodoListFilter('active', props.todoListID),
+    [props.changeTodoListFilter, props.todoListID]
+  )
+
+  const onCompletedClickHandler = useCallback(
+    () => props.changeTodoListFilter('completed', props.todoListID),
+    [props.changeTodoListFilter, props.todoListID]
+  )
+
+  const changeTodoLostTitleHandler = useCallback(
+    (title: string) => {
+      props.changeTodoLostTitleHandler(props.todoListID, title)
+    },
+    [props.changeTodoLostTitleHandler, props.todoListID]
+  )
+
+  let tasksForTodolist = props.tasks
+
+  if (props.filter === 'active') {
+    tasksForTodolist = props.tasks.filter((t) => t.isDone === false)
   }
-
-  const onClickRemoveTodolistHandler = () =>
-    props.removeTodoList(props.todoListID)
-
-  const onAllClickHandler = () =>
-    props.changeTodoListFilter('all', props.todoListID)
-  const onActiveClickHandler = () =>
-    props.changeTodoListFilter('active', props.todoListID)
-  const onCompletedClickHandler = () =>
-    props.changeTodoListFilter('completed', props.todoListID)
-  const changeTodoLostTitleHandler = (title: string) => {
-    props.changeTodoLostTitleHandler(props.todoListID, title)
+  if (props.filter === 'completed') {
+    tasksForTodolist = props.tasks.filter((t) => t.isDone === true)
   }
 
   return (
@@ -62,38 +90,17 @@ export function Todolist(props: PropsType) {
       <AddItemForm addItem={addTask} />
 
       <ul>
-        {props.tasks &&
-          props.tasks.map((t) => {
-            const onClickHandler = () =>
-              props.removeTask(t.id, props.todoListID)
-            const isDoneHandler = () => {
-              props.changeTaskStatus(t.id, props.todoListID)
-            }
-
-            const changeTaskTitleHandler = (title: string) => {
-              props.changeTaskTitle(t.id, props.todoListID, title)
-            }
+        {tasksForTodolist &&
+          tasksForTodolist.map((t) => {
             return (
-              <li key={t.id}>
-                <Checkbox
-                  checked={t.isDone}
-                  onChange={isDoneHandler}
-                  size={'small'}
-                  color={'primary'}
-                />
-                <EditableSpan
-                  isDone={t.isDone}
-                  title={t.title}
-                  changeTitleHandler={changeTaskTitleHandler}
-                />
-                <IconButton
-                  onClick={onClickHandler}
-                  color={'primary'}
-                  size={'small'}
-                >
-                  <Delete />
-                </IconButton>
-              </li>
+              <Task
+                key={t.id}
+                task={t}
+                todoListId={props.todoListID}
+                isDoneHandler={props.changeTaskStatus}
+                changeTaskTitleHandler={props.changeTaskTitle}
+                onClickRemoveTaskHandler={props.removeTask}
+              />
             )
           })}
       </ul>
@@ -129,4 +136,4 @@ export function Todolist(props: PropsType) {
       </div>
     </div>
   )
-}
+})

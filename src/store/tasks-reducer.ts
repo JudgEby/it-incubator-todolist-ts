@@ -56,25 +56,22 @@ export const tasksReducer = (
       }
     }
     case 'CHANGE-TASK-STATUS': {
-      const searchedTask = tasks[action.todoListID].find(
-        (task) => task.id === action.taskId
-      )
-      if (searchedTask) {
-        searchedTask.isDone = !searchedTask.isDone
-        return { ...tasks }
-      }
-      return { ...tasks }
+      const newTasks = tasks[action.todoListID].map((task) => {
+        if (task.id === action.taskId) {
+          return { ...task, isDone: !task.isDone }
+        }
+        return task
+      })
+      return { ...tasks, [action.todoListID]: newTasks }
     }
     case 'CHANGE-TASK-TITLE': {
-      const searchedTask = tasks[action.todoListID].find(
-        (task) => task.id === action.taskId
-      )
-
-      if (searchedTask) {
-        searchedTask.title = action.title
-        return { ...tasks }
-      }
-      return { ...tasks }
+      const newTasks = tasks[action.todoListID].map((task) => {
+        if (task.id === action.taskId) {
+          return { ...task, title: action.title }
+        }
+        return task
+      })
+      return { ...tasks, [action.todoListID]: newTasks }
     }
     case 'ADD-TODOLIST':
       return { ...tasks, [action.todoListID]: [] }

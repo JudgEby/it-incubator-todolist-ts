@@ -6,7 +6,7 @@ type AddItemFormPT = {
   addItem: (value: string) => void
 }
 
-const AddItemForm = ({ addItem }: AddItemFormPT) => {
+const AddItemForm = React.memo(({ addItem }: AddItemFormPT) => {
   let [title, setTitle] = useState('')
   let [error, setError] = useState<null | string>(null)
 
@@ -15,6 +15,7 @@ const AddItemForm = ({ addItem }: AddItemFormPT) => {
   }
 
   const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (error !== null) setError(null)
     if (event.key === 'Enter') {
       addItemLocal()
     }
@@ -47,6 +48,6 @@ const AddItemForm = ({ addItem }: AddItemFormPT) => {
       </IconButton>
     </div>
   )
-}
+})
 
 export default AddItemForm
