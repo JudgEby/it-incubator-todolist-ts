@@ -28,7 +28,6 @@ const Task = React.memo((props: TaskPropsType) => {
     (title: string) => changeTaskTitleHandler(id, todoListId, title),
     []
   )
-
   return (
     <li key={id}>
       <Checkbox
