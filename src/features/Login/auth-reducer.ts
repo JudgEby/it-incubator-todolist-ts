@@ -22,28 +22,14 @@ const slice = createSlice({
 		setIsLoggedInAC: (state, action: PayloadAction<{ value: boolean }>) => {
 			state.isLoggedIn = action.payload.value
 		},
+		clearSateAC: () => {},
 	},
 })
 
 export const authReducer = slice.reducer
-// 	(
-// 	state: InitialStateType = initialState,
-// 	action: AuthActionsType
-// ): InitialStateType => {
-// 	switch (action.type) {
-// 		case 'login/SET-IS-LOGGED-IN':
-// 			return { ...state, isLoggedIn: action.value }
-// 		default:
-// 			return state
-// 	}
-// }
+
 // actions
-
-export const { setIsLoggedInAC } = slice.actions
-
-// export const setIsLoggedInAC = (value: boolean) =>
-// 	({ type: 'login/SET-IS-LOGGED-IN', value } as const)
-export const clearSateAC = () => ({ type: 'login/CLEAR-STATE' } as const)
+export const { setIsLoggedInAC, clearSateAC } = slice.actions
 
 // thunks
 export const loginTC =

@@ -1,11 +1,11 @@
 import {
-	TasksActionsType,
-	tasksReducer,
-} from '../features/TodolistsList/tasks-reducer'
-import {
 	TodoListActionsType,
 	todolistsReducer,
 } from '../features/TodolistsList/todolists-reducer'
+import {
+	TasksActionsType,
+	tasksReducer,
+} from '../features/TodolistsList/tasks-reducer'
 import { combineReducers } from 'redux'
 import thunkMiddleware, { ThunkAction } from 'redux-thunk'
 import { AppActionsType, appReducer } from './app-reducer'
@@ -15,8 +15,8 @@ import { configureStore } from '@reduxjs/toolkit'
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
 const rootReducer = combineReducers({
-	tasks: tasksReducer,
 	todolists: todolistsReducer,
+	tasks: tasksReducer,
 	app: appReducer,
 	auth: authReducer,
 })
