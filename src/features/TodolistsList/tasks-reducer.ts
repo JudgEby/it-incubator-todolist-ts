@@ -86,11 +86,11 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
 export const fetchTasksTC =
 	(todolistId: string): AppThunk =>
 	dispatch => {
-		dispatch(setAppStatusAC('loading'))
+		dispatch(setAppStatusAC({ status: 'loading' }))
 		todolistsAPI.getTasks(todolistId).then(res => {
 			const tasks = res.data.items
 			dispatch(setTasksAC(tasks, todolistId))
-			dispatch(setAppStatusAC('succeeded'))
+			dispatch(setAppStatusAC({ status: 'succeeded' }))
 		})
 	}
 export const removeTaskTC =
@@ -104,7 +104,7 @@ export const removeTaskTC =
 export const addTaskTC =
 	(title: string, todolistId: string): AppThunk =>
 	dispatch => {
-		dispatch(setAppStatusAC('loading'))
+		dispatch(setAppStatusAC({ status: 'loading' }))
 		todolistsAPI
 			.createTask(todolistId, title)
 			.then(res => {
@@ -112,7 +112,7 @@ export const addTaskTC =
 					const task = res.data.data.item
 					const action = addTaskAC(task)
 					dispatch(action)
-					dispatch(setAppStatusAC('succeeded'))
+					dispatch(setAppStatusAC({ status: 'succeeded' }))
 				} else {
 					handleServerAppError(res.data, dispatch)
 				}

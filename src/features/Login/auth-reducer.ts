@@ -9,26 +9,40 @@ import {
 	handleServerNetworkError,
 } from '../../utils/error-utils'
 import { AppThunk } from '../../app/store'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState = {
 	isLoggedIn: false,
 }
-type InitialStateType = typeof initialState
 
-export const authReducer = (
-	state: InitialStateType = initialState,
-	action: AuthActionsType
-): InitialStateType => {
-	switch (action.type) {
-		case 'login/SET-IS-LOGGED-IN':
-			return { ...state, isLoggedIn: action.value }
-		default:
-			return state
-	}
-}
+const slice = createSlice({
+	name: 'auth',
+	initialState: initialState,
+	reducers: {
+		setIsLoggedInAC: (state, action: PayloadAction<{ value: boolean }>) => {
+			state.isLoggedIn = action.payload.value
+		},
+	},
+})
+
+export const authReducer = slice.reducer
+// 	(
+// 	state: InitialStateType = initialState,
+// 	action: AuthActionsType
+// ): InitialStateType => {
+// 	switch (action.type) {
+// 		case 'login/SET-IS-LOGGED-IN':
+// 			return { ...state, isLoggedIn: action.value }
+// 		default:
+// 			return state
+// 	}
+// }
 // actions
-export const setIsLoggedInAC = (value: boolean) =>
-	({ type: 'login/SET-IS-LOGGED-IN', value } as const)
+
+export const { setIsLoggedInAC } = slice.actions
+
+// export const setIsLoggedInAC = (value: boolean) =>
+// 	({ type: 'login/SET-IS-LOGGED-IN', value } as const)
 export const clearSateAC = () => ({ type: 'login/CLEAR-STATE' } as const)
 
 // thunks
@@ -36,11 +50,11 @@ export const loginTC =
 	(data: any): AppThunk =>
 	async dispatch => {
 		try {
-			dispatch(setAppStatusAC('loading'))
+			dispatch(setAppStatusAC({ status: 'loading' }))
 			const res = await authAPI.login(data)
 			if (res.data.resultCode === 0) {
-				dispatch(setIsLoggedInAC(true))
-				dispatch(setAppStatusAC('succeeded'))
+				dispatch(setIsLoggedInAC({ value: true }))
+				dispatch(setAppStatusAC({ status: 'succeeded' }))
 			} else {
 				handleServerAppError(res.data, dispatch)
 			}
@@ -50,14 +64,14 @@ export const loginTC =
 	}
 
 export const logoutTC = (): AppThunk => dispatch => {
-	dispatch(setAppStatusAC('loading'))
+	dispatch(setAppStatusAC({ status: 'loading' }))
 	authAPI
 		.logout()
 		.then(res => {
 			if (res.data.resultCode === 0) {
-				dispatch(setIsLoggedInAC(false))
+				dispatch(setIsLoggedInAC({ value: false }))
 				dispatch(clearSateAC())
-				dispatch(setAppStatusAC('succeeded'))
+				dispatch(setAppStatusAC({ status: 'succeeded' }))
 			} else {
 				handleServerAppError(res.data, dispatch)
 			}

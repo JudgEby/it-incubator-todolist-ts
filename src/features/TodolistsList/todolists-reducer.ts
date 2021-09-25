@@ -80,14 +80,14 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) =>
 // thunks
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
 	try {
-		dispatch(setAppStatusAC('loading'))
+		dispatch(setAppStatusAC({ status: 'loading' }))
 		const res = await todolistsAPI.getTodolists()
 		if (Array.isArray(res.data)) {
 			dispatch(setTodolistsAC(res.data))
 			res.data.forEach(tl => {
 				dispatch(fetchTasksTC(tl.id))
 			})
-			dispatch(setAppStatusAC('succeeded'))
+			dispatch(setAppStatusAC({ status: 'succeeded' }))
 		} else {
 			const data = {
 				resultCode: 1,
@@ -105,23 +105,23 @@ export const removeTodolistTC =
 	(todolistId: string): AppThunk =>
 	dispatch => {
 		//изменим глобальный статус приложения, чтобы вверху полоса побежала
-		dispatch(setAppStatusAC('loading'))
+		dispatch(setAppStatusAC({ status: 'loading' }))
 		//изменим статус конкретного тудулиста, чтобы он мог задизеблить что надо
 		dispatch(changeTodolistEntityStatusAC(todolistId, 'loading'))
 		todolistsAPI.deleteTodolist(todolistId).then(res => {
 			dispatch(removeTodolistAC(todolistId))
 			//скажем глобально приложению, что асинхронная операция завершена
-			dispatch(setAppStatusAC('succeeded'))
+			dispatch(setAppStatusAC({ status: 'succeeded' }))
 		})
 	}
 
 export const addTodolistTC =
 	(title: string): AppThunk =>
 	dispatch => {
-		dispatch(setAppStatusAC('loading'))
+		dispatch(setAppStatusAC({ status: 'loading' }))
 		todolistsAPI.createTodolist(title).then(res => {
 			dispatch(addTodolistAC(res.data.data.item))
-			dispatch(setAppStatusAC('succeeded'))
+			dispatch(setAppStatusAC({ status: 'succeeded' }))
 		})
 	}
 
